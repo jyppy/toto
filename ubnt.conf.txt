@@ -1,0 +1,177 @@
+set firewall all-ping enable
+set firewall broadcast-ping disable
+set firewall ipv6-name WANv6_IN default-action drop
+set firewall ipv6-name WANv6_IN description 'WAN inbound traffic forwarded to LAN'
+set firewall ipv6-name WANv6_IN enable-default-log
+set firewall ipv6-name WANv6_IN rule 10 action accept
+set firewall ipv6-name WANv6_IN rule 10 description 'Allow established/related sessions'
+set firewall ipv6-name WANv6_IN rule 10 state established enable
+set firewall ipv6-name WANv6_IN rule 10 state related enable
+set firewall ipv6-name WANv6_IN rule 20 action drop
+set firewall ipv6-name WANv6_IN rule 20 description 'Drop invalid state'
+set firewall ipv6-name WANv6_IN rule 20 state invalid enable
+set firewall ipv6-name WANv6_LOCAL default-action drop
+set firewall ipv6-name WANv6_LOCAL description 'WAN inbound traffic to the router'
+set firewall ipv6-name WANv6_LOCAL enable-default-log
+set firewall ipv6-name WANv6_LOCAL rule 10 action accept
+set firewall ipv6-name WANv6_LOCAL rule 10 description 'Allow established/related sessions'
+set firewall ipv6-name WANv6_LOCAL rule 10 state established enable
+set firewall ipv6-name WANv6_LOCAL rule 10 state related enable
+set firewall ipv6-name WANv6_LOCAL rule 20 action drop
+set firewall ipv6-name WANv6_LOCAL rule 20 description 'Drop invalid state'
+set firewall ipv6-name WANv6_LOCAL rule 20 state invalid enable
+set firewall ipv6-name WANv6_LOCAL rule 30 action accept
+set firewall ipv6-name WANv6_LOCAL rule 30 description 'Allow IPv6 icmp'
+set firewall ipv6-name WANv6_LOCAL rule 30 protocol ipv6-icmp
+set firewall ipv6-name WANv6_LOCAL rule 40 action accept
+set firewall ipv6-name WANv6_LOCAL rule 40 description 'allow dhcpv6'
+set firewall ipv6-name WANv6_LOCAL rule 40 destination port 546
+set firewall ipv6-name WANv6_LOCAL rule 40 protocol udp
+set firewall ipv6-name WANv6_LOCAL rule 40 source port 547
+set firewall ipv6-receive-redirects disable
+set firewall ipv6-src-route disable
+set firewall ip-src-route disable
+set firewall log-martians enable
+set firewall name WAN_IN default-action drop
+set firewall name WAN_IN description 'WAN to internal'
+set firewall name WAN_IN rule 10 action accept
+set firewall name WAN_IN rule 10 description 'Allow established/related'
+set firewall name WAN_IN rule 10 state established enable
+set firewall name WAN_IN rule 10 state related enable
+set firewall name WAN_IN rule 20 action drop
+set firewall name WAN_IN rule 20 description 'Drop invalid state'
+set firewall name WAN_IN rule 20 state invalid enable
+set firewall name WAN_LOCAL default-action drop
+set firewall name WAN_LOCAL description 'WAN to router'
+set firewall name WAN_LOCAL rule 10 action accept
+set firewall name WAN_LOCAL rule 10 description 'Allow established/related'
+set firewall name WAN_LOCAL rule 10 state established enable
+set firewall name WAN_LOCAL rule 10 state related enable
+set firewall name WAN_LOCAL rule 20 action drop
+set firewall name WAN_LOCAL rule 20 description 'Drop invalid state'
+set firewall name WAN_LOCAL rule 20 state invalid enable
+set firewall receive-redirects disable
+set firewall send-redirects enable
+set firewall source-validation disable
+set firewall syn-cookies enable
+set interfaces ethernet eth0 address dhcp
+set interfaces ethernet eth0 description Internet
+set interfaces ethernet eth0 dhcpv6-options parameters-only
+set interfaces ethernet eth0 dhcpv6-options temporary
+set interfaces ethernet eth0 dhcpv6-pd pd 1 interface eth1 host-address '::1'
+set interfaces ethernet eth0 dhcpv6-pd pd 1 interface eth1 service slaac
+set interfaces ethernet eth0 dhcpv6-pd pd 1 prefix-length 64
+set interfaces ethernet eth0 dhcpv6-pd pd 2 interface eth2 host-address '::1'
+set interfaces ethernet eth0 dhcpv6-pd pd 2 interface eth2 service dhcpv6-stateful
+set interfaces ethernet eth0 dhcpv6-pd pd 2 prefix-length 64
+set interfaces ethernet eth0 dhcpv6-pd prefix-only
+set interfaces ethernet eth0 dhcpv6-pd rapid-commit enable
+set interfaces ethernet eth0 duplex auto
+set interfaces ethernet eth0 firewall in ipv6-name WANv6_IN
+set interfaces ethernet eth0 firewall in name WAN_IN
+set interfaces ethernet eth0 firewall local ipv6-name WANv6_LOCAL
+set interfaces ethernet eth0 firewall local name WAN_LOCAL
+set interfaces ethernet eth0 ipv6 address autoconf
+set interfaces ethernet eth0 ipv6 dup-addr-detect-transmits 1
+set interfaces ethernet eth0 speed auto
+set interfaces ethernet eth1 address 192.168.1.1/24
+set interfaces ethernet eth1 description Local
+set interfaces ethernet eth1 duplex auto
+set interfaces ethernet eth1 speed auto
+set interfaces ethernet eth2 address 192.168.2.1/24
+set interfaces ethernet eth2 description 'Local 2'
+set interfaces ethernet eth2 duplex auto
+set interfaces ethernet eth2 speed auto
+set interfaces loopback lo
+set port-forward auto-firewall enable
+set port-forward hairpin-nat enable
+set port-forward lan-interface eth2
+set port-forward rule 1 description vu
+set port-forward rule 1 forward-to address 192.168.2.15
+set port-forward rule 1 forward-to port 56789
+set port-forward rule 1 original-port 56789
+set port-forward rule 1 protocol tcp_udp
+set port-forward wan-interface eth0
+set service dhcp-server disabled false
+set service dhcp-server hostfile-update disable
+set service dhcp-server shared-network-name LAN2 authoritative disable
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 default-router 192.168.2.1
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 dns-server 192.168.2.1
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 lease 3600
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 start 192.168.2.10 stop 192.168.2.240
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping BoseS10 ip-address 192.168.2.11
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping BoseS10 mac-address '20:c3:8f:8a:7e:70'
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping Braindead ip-address 192.168.2.23
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping Braindead mac-address '2c:33:61:a2:6c:60'
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping Chloe-provost ip-address 192.168.2.73
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping Chloe-provost mac-address 'c0:ce:cd:bd:d9:5d'
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping Chloes-iPad ip-address 192.168.2.72
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping Chloes-iPad mac-address 'f0:24:75:18:c8:41'
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping Chloes-iPhone-2 ip-address 192.168.2.74
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping Chloes-iPhone-2 mac-address '40:b3:95:50:7b:d5'
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping Family-Room ip-address 192.168.2.13
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping Family-Room mac-address '9c:20:7b:c5:87:dc'
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping Gabriels-iPhone ip-address 192.168.2.63
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping Gabriels-iPhone mac-address '68:09:27:3c:f7:8d'
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping Gabriels-iPad-2 ip-address 192.168.2.62
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping Gabriels-iPad-2 mac-address '54:ae:27:45:59:2c'
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping JYP-MBP ip-address 192.168.2.25
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping JYP-MBP mac-address 'ac:bc:32:8e:07:25'
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping Juliens-Air ip-address 192.168.2.51
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping Juliens-Air mac-address 'c8:69:cd:8d:6b:b2'
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping JuliensiPhone6s ip-address 192.168.2.53
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping JuliensiPhone6s mac-address 'b4:8b:19:d9:35:3a'
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping Louis-IPhone ip-address 192.168.2.43
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping Louis-IPhone mac-address '74:1b:b2:79:3c:c5'
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping Louiss-Air ip-address 192.168.2.41
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping Louiss-Air mac-address '64:76:ba:90:f0:b2'
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping MBAir-13 ip-address 192.168.2.31
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping MBAir-13 mac-address '28:37:37:23:71:1c'
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping Mini ip-address 192.168.2.16
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping Mini mac-address '80:e6:50:16:7b:70'
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping RIPE ip-address 192.168.2.6
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping RIPE mac-address 'e8:de:27:c9:7f:24'
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping Rumpus-room ip-address 192.168.2.12
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping Rumpus-room mac-address '58:55:ca:52:2a:63'
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping Sonya-iPhone ip-address 192.168.2.33
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping Sonya-iPhone mac-address '64:9a:be:77:0d:f7'
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping Xbox-SystemOS ip-address 192.168.2.101
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping Xbox-SystemOS mac-address '50:1a:c5:23:a3:eb'
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping android-will ip-address 192.168.2.111
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping android-will mac-address 'b4:ce:f6:7f:16:ba'
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping imac27 ip-address 192.168.2.15
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping imac27 mac-address '7c:6d:62:78:db:2a'
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping thinoz ip-address 192.168.2.21
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping thinoz mac-address '68:a8:6d:03:e3:7e'
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping voip ip-address 192.168.2.9
+set service dhcp-server shared-network-name LAN2 subnet 192.168.2.0/24 static-mapping voip mac-address '00:0e:08:ca:43:89'
+set service dhcp-server use-dnsmasq disable
+set service dhcpv6-server shared-network-name eth2-pd subnet '2401:a400:2801:a702::/64' static-mapping MBP identifier 1e2b4c8c
+set service dhcpv6-server shared-network-name eth2-pd subnet '2401:a400:2801:a702::/64' static-mapping MBP ipv6-address '2401:a400:2801:a702::0025'
+set service dns dynamic interface eth0 service dyndns host-name gweau.ddns.net
+set service dns dynamic interface eth0 service dyndns login jyppy65
+set service dns dynamic interface eth0 service dyndns password badoit1234
+set service dns dynamic interface eth0 service dyndns server dynupdate.no-ip.com
+set service dns forwarding cache-size 150
+set service dns forwarding listen-on eth1
+set service dns forwarding listen-on eth2
+set service gui http-port 80
+set service gui https-port 443
+set service gui older-ciphers enable
+set service nat rule 5010 description 'masquerade for WAN'
+set service nat rule 5010 outbound-interface eth0
+set service nat rule 5010 type masquerade
+set service ssh port 22
+set service ssh protocol-version v2
+set system host-name ubnt
+set system login user ubnt authentication encrypted-password '$6$nxca0r5ErJ$4m2WyX3l1pBovz.fcx6ja2gWZhISHyjvoo09tiLwd5hHZs3oKPLfDFyjhsxLmXmrUrskC1khh.15PLPwx0rEC.'sonya@thinoz.lan key AAAAB3NzaC1yc2EAAAADAQABAAABAQCzwXfHSyXc7LUYTXBu7/VRqVKX+kt+y8h32LXOHG3I3zl4m6WGslDP24KYuqu6yNxNWCGZPYkEBelVjIn6h0Fhk3ALa3U4a4jNo1S1BDMyFWuRt2G3WpWHeHUJ/z1xR9f5DKi8lab9pZyILV3RyglQA3gd/+n6i3Oc6NieTKIpwk5SHlAF1IfLHkKp5lTJ30gAa2tsQBSI+DC/zIyypEnG5J20kRRzZ0gZeXgqIDe3oTVzs5jmhTDse0DDwNTAPXEvqDmhGkJesvHoIVLzZb7LhoZgd/+ZLEHigcFCERo5oEzOBd8fvLKaZ5h2OKAwcsIUn9+zaNKlUccsQkL4F6yD
+set system login user ubnt authentication public-keys sonya@thinoz.lan type ssh-rsa
+set system login user ubnt level admin
+set system ntp server 2.ubnt.pool.ntp.org
+set system ntp server 3.ubnt.pool.ntp.org
+set system syslog global facility all level info
+set system syslog global facility protocols level err
+set system syslog host '192.168.2.15:50514' facility all level err
+set system time-zone Australia/Sydney
+set system traffic-analysis dpi enable
+set system traffic-analysis export enable
